@@ -119,6 +119,7 @@
         <category>框架</category>
       </categories>
       <tags>
+        <tag>Spring</tag>
         <tag>SpringMVC</tag>
         <tag>JPA</tag>
       </tags>
