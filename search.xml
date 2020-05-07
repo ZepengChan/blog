@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>RestFull API设计</title>
-    <url>/blog/2020/05/07/RestFull%20API%E8%AE%BE%E8%AE%A1/</url>
+    <title>RestFul API设计</title>
+    <url>/blog/2020/05/07/RestFul%20API%E8%AE%BE%E8%AE%A1/</url>
     <content><![CDATA[<h1 id="Restful-API设计"><a href="#Restful-API设计" class="headerlink" title="Restful API设计"></a>Restful API设计</h1><ul>
 <li><p>rest⻛格请求是什么样的？</p>
 </li>
