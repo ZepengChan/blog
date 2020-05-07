@@ -1,6 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Spring Core总结</title>
+    <url>/blog/2020/05/06/Spring%20Core%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="Spring学习笔记"><a href="#Spring学习笔记" class="headerlink" title="Spring学习笔记"></a>Spring学习笔记</h1><h2 id="Spring的优势"><a href="#Spring的优势" class="headerlink" title="Spring的优势"></a>Spring的优势</h2><ul>
+<li><p><strong>⽅便解耦，简化开发</strong><br>通过Spring提供的IoC容器，可以将对象间的依赖关系交由Spring进⾏控制，避免硬编码所造成的<br>过度程序耦合。⽤户也不必再为单例模式类、属性⽂件解析等这些很底层的需求编写代码，可以更<br>专注于上层的应⽤。</p>
+</li>
+<li><p><strong>AOP编程的⽀持</strong><br>通过Spring的AOP功能，⽅便进⾏⾯向切⾯的编程，许多不容易⽤传统OOP实现的功能可以通过<br>AOP轻松应付。</p>
+</li>
+<li><p><strong>声明式事务的⽀持</strong><br>@Transactional<br>可以将我们从单调烦闷的事务管理代码中解脱出来，通过声明式⽅式灵活的进⾏事务的管理，提⾼<br>开发效率和质量。</p>
+</li>
+<li><p><strong>⽅便程序的测试</strong><br>可以⽤⾮容器依赖的编程⽅式进⾏⼏乎所有的测试⼯作，测试不再是昂贵的操作，⽽是随⼿可做的<br>事情。</p>
+</li>
+<li><p><strong>⽅便集成各种优秀框架</strong><br>Spring可以降低各种框架的使⽤难度，提供了对各种优秀框架（Struts、Hibernate、Hessian、<br>Quartz等）的直接⽀持。</p>
+</li>
+<li><p><strong>降低JavaEE API的使⽤难度</strong><br>Spring对JavaEE API（如JDBC、JavaMail、远程调⽤等）进⾏了薄薄的封装层，使这些API的使⽤<br>难度⼤为降低。</p>
+</li>
+<li><p><strong>源码是经典的 Java 学习范例</strong><br>Spring的源代码设计精妙、结构清晰、匠⼼独⽤，处处体现着⼤师对Java设计模式灵活运⽤以及对<br>Java技术的⾼深造诣。它的源代码⽆意是Java技术的最佳实践的范例。</p>
+</li>
+</ul>
+<h2 id="Spring-IoC"><a href="#Spring-IoC" class="headerlink" title="Spring IoC"></a>Spring IoC</h2><h3 id="bean的生命周期"><a href="#bean的生命周期" class="headerlink" title="bean的生命周期"></a>bean的生命周期</h3><p>bean的生命周期是指一个bean对象从创建到销毁的过程. bean不等于普通对象, 是里胡一个java对象只是bean的生命周期过程的一步,只有走完了流程, 才能称之为bean. 核心过程如下:</p>
+<ol>
+<li><p><strong>实例化bean</strong>: 主要通过反射技术实例化</p>
+</li>
+<li><p><strong>设置对象属性(依赖注入)</strong></p>
+</li>
+<li><p><strong>处理Aware接口</strong></p>
+<p>如果实现了xxxAware接口, 会将相关的xxxAware实例注入给bean</p>
+<p>如果实现了BeanNameAware接口,会调用它实现的setBeanName(String beanId)方法</p>
+<p>如果事项了BeanFactoryAware接口, 会调用它实现的setBeanFactory()方法, 传递的是Spring工厂</p>
+<p>如果实现了ApplicationContextAware接口, 会调用它实现的setApplicationContext()方法,传递的是Spring上下文</p>
+</li>
+<li><p><strong>BeanPostProcessor:</strong></p>
+<p>如果实现了此接口,会调用 postProcessBeforeInitialization()方法</p>
+</li>
+<li><p><strong>InitializingBean与 init-method:</strong></p>
+<p>实现bean初始化的一些逻辑</p>
+<p>如果配置了init-method,则会自动调用此方法,完成自定义初始化逻辑</p>
+</li>
+<li><p>如果实现了<strong>BeanPostProcessor</strong>接口,会调用 postProcessAfterInitialization()方法</p>
+</li>
+<li><p><strong>DisposableBean</strong>:</p>
+<p>当bean不需要使用时, 会经过清理阶段, 如果实现了此接口, 则会调用它实现的destroy()方法</p>
+</li>
+<li><p>最后,如果配置了<strong>destroy-method:</strong>则会自动调用此方法,完成自定义销毁逻辑</p>
+</li>
+</ol>
+<h3 id="高级特性"><a href="#高级特性" class="headerlink" title="高级特性"></a>高级特性</h3><h4 id="lazy-Init-延迟加载"><a href="#lazy-Init-延迟加载" class="headerlink" title="lazy-Init 延迟加载"></a>lazy-Init 延迟加载</h4><p>设置 lazy-init 为 true 或者注解 @Lazy 的 bean 将不会在 ApplicationContext 启动时提前被实例化，⽽是第⼀次向容器<br>通过 getBean 索取 bean 或者在 bean被其他立即实例化的bean引用时实例化的。</p>
+<h4 id="FactoryBean-和-BeanFactory"><a href="#FactoryBean-和-BeanFactory" class="headerlink" title="FactoryBean 和 BeanFactory"></a>FactoryBean 和 BeanFactory</h4><p>BeanFactory接⼝是容器的顶级接⼝，定义了容器的⼀些基础⾏为，负责⽣产和管理Bean的⼀个⼯⼚，<br>具体使⽤它下⾯的⼦接⼝类型，⽐如ApplicationContext；此处我们重点分析FactoryBean</p>
+<p>Spring中Bean有两种，⼀种是普通Bean，⼀种是⼯⼚Bean（FactoryBean），FactoryBean可以⽣成<br>某⼀个类型的Bean实例（返回给我们），也就是说我们可以借助于它⾃定义Bean的创建过程。</p>
+<p>自定义FactoryBean </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 可以让我们⾃定义Bean的创建过程（完成复杂Bean的定义）</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FactoryBean</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="comment">// 返回FactoryBean创建的Bean实例，如果isSingleton返回true，</span></span><br><span class="line">    <span class="comment">//则该实例会放到Spring容器的单例对象缓存池中Map</span></span><br><span class="line">    <span class="function">T <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="comment">// 返回FactoryBean创建的Bean类型</span></span><br><span class="line">    Class&lt;?&gt; getObjectType();</span><br><span class="line">    <span class="comment">// 返回作⽤域是否单例</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">boolean</span> <span class="title">isSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  	  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="后置处理器"><a href="#后置处理器" class="headerlink" title="后置处理器"></a>后置处理器</h4><p>Spring提供了两种后处理bean的扩展接⼝, 分别为 BeanPostProcessor 和BeanFactoryPostProcessor，两者在使⽤上是有所区别的。⼯⼚初始化（BeanFactory）—&gt; Bean, 对象在BeanFactory初始化之后可以使⽤BeanFactoryPostProcessor进⾏后置处理, 做⼀些事情在Bean对象实例化（并不是Bean的整个⽣命周期完成）之后可以使⽤BeanPostProcessor进⾏后置处理做⼀些事情<br>注意：对象不⼀定是springbean，⽽springbean⼀定是个对象</p>
+<h3 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h3><p>有五种自动装配方式, 可以用来知道Spring容器用自动装配方式来依赖注入:</p>
+<ul>
+<li><strong>no</strong>: 默认不进行自动装配, 通过显式设置ref属性来进行装配</li>
+<li><strong>byName</strong>: 通过参数名自动装配, Spring容器在配置文件中发现bean的autowire属性被设置成byName,止呕容器试图装配和该bean的属性具有相同名字的bean</li>
+<li><strong>byType</strong>: 通过参数类型自动装配, Spring容器在配置文件中发现bean的autowire属性被设置成byType，之后容器试图匹配、装配和该bean的属性具有相同类型的bean。如果有多个bean符合条件，则抛出错误。</li>
+<li><strong>constructor</strong>：这个方式类似于byType，但是要提供给构造器参数，如果没有确定的带参数的构造器参数类型，将会抛出异常。</li>
+<li><strong>autodetect</strong>：首先尝试使用constructor来自动装配，如果无法工作，则使用byType方式。</li>
+</ul>
+<h2 id="SpringAOP及应用"><a href="#SpringAOP及应用" class="headerlink" title="SpringAOP及应用"></a>SpringAOP及应用</h2><h3 id="AOP的实现"><a href="#AOP的实现" class="headerlink" title="AOP的实现"></a>AOP的实现</h3><p>Spring 实现AOP思想使⽤的是动态代理技术<br>默认情况下，Spring会根据被代理对象是否实现接⼝来选择使⽤JDK还是CGLIB。当被代理对象没有实现<br>任何接⼝时，Spring会选择CGLIB。当被代理对象实现了接⼝，Spring会选择JDK官⽅的代理技术，不过<br>我们可以通过配置的⽅式，让Spring强制使⽤CGLIB</p>
+<h3 id="Spring-声明式事务的⽀持"><a href="#Spring-声明式事务的⽀持" class="headerlink" title="Spring 声明式事务的⽀持"></a>Spring 声明式事务的⽀持</h3><p><strong>编程式事务</strong>：在业务代码中添加事务控制代码，这样的事务控制机制就叫做编程式事务<br>        <strong>声明式事务</strong>：通过xml或者注解配置的⽅式达到事务控制的⽬的，叫做声明式事务</p>
+<h4 id="事务的四大特性"><a href="#事务的四大特性" class="headerlink" title="事务的四大特性"></a>事务的四大特性</h4><ul>
+<li><p>原⼦性（Atomicity） 原⼦性是指事务是⼀个不可分割的⼯作单位，事务中的操作要么都发⽣，要么都<br>不发⽣。从操作的⻆度来描述，事务中的各个操作要么都成功要么都失败</p>
+</li>
+<li><p>⼀致性（Consistency）事务必须使数据库从⼀个⼀致性状态变换到另外⼀个⼀致性状态。<br>例如转账前A有1000，B有1000。转账后A+B也得是2000。<br>⼀致性是从数据的⻆度来说的，（1000，1000） （900，1100），不应该出现（900，1000）</p>
+</li>
+<li><p>隔离性（Isolation）事务的隔离性是多个⽤户并发访问数据库时，数据库为每⼀个⽤户开启的事务，<br>每个事务不能被其他事务的操作数据所⼲扰，多个并发事务之间要相互隔离。<br>⽐如：事务1给员⼯涨⼯资2000，但是事务1尚未被提交，员⼯发起事务2查询⼯资，发现⼯资涨了2000<br>块钱，读到了事务1尚未提交的数据（脏读）</p>
+</li>
+<li><p>持久性（Durability）持久性是指⼀个事务⼀旦被提交，它对数据库中数据的改变就是永久性的，接下来即使数据库发⽣故障<br>也不应该对其有任何影响。</p>
+</li>
+</ul>
+<h4 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h4><ul>
+<li><p>Serializable（串⾏化）：可避免脏读、不可重复读、虚读情况的发⽣。（串⾏化） 最⾼</p>
+</li>
+<li><p>Repeatable read（可重复读）：可避免脏读、不可重复读情况的发⽣。(幻读有可能发⽣) 第⼆<br>该机制下会对要update的⾏进⾏加锁</p>
+</li>
+<li><p>Read committed（读已提交）：可避免脏读情况发⽣。不可重复读和幻读⼀定会发⽣。 第三</p>
+</li>
+<li><p>Read uncommitted（读未提交）：最低级别，以上情况均⽆法保证。(读未提交) 最低</p>
+<table>
+<thead>
+<tr>
+<th>事务隔离级别</th>
+<th>脏读</th>
+<th>不可重复度</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read uncommitted（读未提交）</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>Read committed（读已提交)</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>Repeatable read（可重复读）</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>Serializable(串行化)</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h2 id="Spring设计模式"><a href="#Spring设计模式" class="headerlink" title="Spring设计模式"></a>Spring设计模式</h2><ul>
+<li><p><strong>工厂设计模式</strong>:  BeanFactory, ApplicationContext 通过工厂模式创建对象</p>
+</li>
+<li><p><strong>代理设计模式</strong>:  SrpingAOP 用到了JDK动态代理和CGLIB动态代理</p>
+</li>
+<li><p><strong>单例设计模式</strong>:  bean默认都是单例</p>
+</li>
+<li><p><strong>模板方法模式</strong>:  jdbcTemplate, hibernateTemplate 等以Template结尾的对数据库操作的类,用到了模板设计模式</p>
+</li>
+<li><p><strong>包装器设计模式</strong>:  动态数据源的支持</p>
+</li>
+<li><p><strong>观察者设计模式</strong>:   Spring时间驱动模型</p>
+</li>
+<li><p><strong>适配器模式</strong>:   SpringAOP的增强或者通知(Advice)使用了适配器模式, SpringMVC也是用到了该模式适配Controller</p>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>mybatis总结</title>
     <url>/blog/2020/05/06/mybatis%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h1 id="mybatis学习笔记"><a href="#mybatis学习笔记" class="headerlink" title="mybatis学习笔记"></a>mybatis学习笔记</h1><h3 id="mybatis解决JDBC的问题"><a href="#mybatis解决JDBC的问题" class="headerlink" title="mybatis解决JDBC的问题:"></a>mybatis解决JDBC的问题:</h3><p>1.数据库连接创建, 释放频繁造成系统资源的浪费</p>
@@ -239,141 +374,6 @@
 <h2 id="Spring-Data-JPA"><a href="#Spring-Data-JPA" class="headerlink" title="Spring Data JPA"></a>Spring Data JPA</h2><p>Spring Data JPA 是 Spring 提供的⼀个封装了JPA 操作的框架，⽽ JPA 仅仅是规范，单独使⽤规范⽆法<br>具体做什么，那么Spring Data JPA 、 JPA规范 以及 Hibernate （JPA 规范的⼀种实现）之间的关系是什<br>么？</p>
 <p><img src="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/JPA.jpg" alt="JPA"></p>
 <p>JPA 是⼀套规范，内部是由接⼝和抽象类组成的，Hiberanate 是⼀套成熟的 ORM 框架，⽽且<br>Hiberanate 实现了 JPA 规范，所以可以称 Hiberanate 为 JPA 的⼀种实现⽅式，我们使⽤ JPA 的 API 编<br>程，意味着站在更⾼的⻆度去看待问题（⾯向接⼝编程）。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Spring Core总结</title>
-    <url>/blog/2020/05/06/Spring%20Core%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="Spring学习笔记"><a href="#Spring学习笔记" class="headerlink" title="Spring学习笔记"></a>Spring学习笔记</h1><h2 id="Spring的优势"><a href="#Spring的优势" class="headerlink" title="Spring的优势"></a>Spring的优势</h2><ul>
-<li><p><strong>⽅便解耦，简化开发</strong><br>通过Spring提供的IoC容器，可以将对象间的依赖关系交由Spring进⾏控制，避免硬编码所造成的<br>过度程序耦合。⽤户也不必再为单例模式类、属性⽂件解析等这些很底层的需求编写代码，可以更<br>专注于上层的应⽤。</p>
-</li>
-<li><p><strong>AOP编程的⽀持</strong><br>通过Spring的AOP功能，⽅便进⾏⾯向切⾯的编程，许多不容易⽤传统OOP实现的功能可以通过<br>AOP轻松应付。</p>
-</li>
-<li><p><strong>声明式事务的⽀持</strong><br>@Transactional<br>可以将我们从单调烦闷的事务管理代码中解脱出来，通过声明式⽅式灵活的进⾏事务的管理，提⾼<br>开发效率和质量。</p>
-</li>
-<li><p><strong>⽅便程序的测试</strong><br>可以⽤⾮容器依赖的编程⽅式进⾏⼏乎所有的测试⼯作，测试不再是昂贵的操作，⽽是随⼿可做的<br>事情。</p>
-</li>
-<li><p><strong>⽅便集成各种优秀框架</strong><br>Spring可以降低各种框架的使⽤难度，提供了对各种优秀框架（Struts、Hibernate、Hessian、<br>Quartz等）的直接⽀持。</p>
-</li>
-<li><p><strong>降低JavaEE API的使⽤难度</strong><br>Spring对JavaEE API（如JDBC、JavaMail、远程调⽤等）进⾏了薄薄的封装层，使这些API的使⽤<br>难度⼤为降低。</p>
-</li>
-<li><p><strong>源码是经典的 Java 学习范例</strong><br>Spring的源代码设计精妙、结构清晰、匠⼼独⽤，处处体现着⼤师对Java设计模式灵活运⽤以及对<br>Java技术的⾼深造诣。它的源代码⽆意是Java技术的最佳实践的范例。</p>
-</li>
-</ul>
-<h2 id="Spring-IoC"><a href="#Spring-IoC" class="headerlink" title="Spring IoC"></a>Spring IoC</h2><h3 id="bean的生命周期"><a href="#bean的生命周期" class="headerlink" title="bean的生命周期"></a>bean的生命周期</h3><p>bean的生命周期是指一个bean对象从创建到销毁的过程. bean不等于普通对象, 是里胡一个java对象只是bean的生命周期过程的一步,只有走完了流程, 才能称之为bean. 核心过程如下:</p>
-<ol>
-<li><p><strong>实例化bean</strong>: 主要通过反射技术实例化</p>
-</li>
-<li><p><strong>设置对象属性(依赖注入)</strong></p>
-</li>
-<li><p><strong>处理Aware接口</strong></p>
-<p>如果实现了xxxAware接口, 会将相关的xxxAware实例注入给bean</p>
-<p>如果实现了BeanNameAware接口,会调用它实现的setBeanName(String beanId)方法</p>
-<p>如果事项了BeanFactoryAware接口, 会调用它实现的setBeanFactory()方法, 传递的是Spring工厂</p>
-<p>如果实现了ApplicationContextAware接口, 会调用它实现的setApplicationContext()方法,传递的是Spring上下文</p>
-</li>
-<li><p><strong>BeanPostProcessor:</strong></p>
-<p>如果实现了此接口,会调用 postProcessBeforeInitialization()方法</p>
-</li>
-<li><p><strong>InitializingBean与 init-method:</strong></p>
-<p>实现bean初始化的一些逻辑</p>
-<p>如果配置了init-method,则会自动调用此方法,完成自定义初始化逻辑</p>
-</li>
-<li><p>如果实现了<strong>BeanPostProcessor</strong>接口,会调用 postProcessAfterInitialization()方法</p>
-</li>
-<li><p><strong>DisposableBean</strong>:</p>
-<p>当bean不需要使用时, 会经过清理阶段, 如果实现了此接口, 则会调用它实现的destroy()方法</p>
-</li>
-<li><p>最后,如果配置了<strong>destroy-method:</strong>则会自动调用此方法,完成自定义销毁逻辑</p>
-</li>
-</ol>
-<h3 id="高级特性"><a href="#高级特性" class="headerlink" title="高级特性"></a>高级特性</h3><h4 id="lazy-Init-延迟加载"><a href="#lazy-Init-延迟加载" class="headerlink" title="lazy-Init 延迟加载"></a>lazy-Init 延迟加载</h4><p>设置 lazy-init 为 true 或者注解 @Lazy 的 bean 将不会在 ApplicationContext 启动时提前被实例化，⽽是第⼀次向容器<br>通过 getBean 索取 bean 或者在 bean被其他立即实例化的bean引用时实例化的。</p>
-<h4 id="FactoryBean-和-BeanFactory"><a href="#FactoryBean-和-BeanFactory" class="headerlink" title="FactoryBean 和 BeanFactory"></a>FactoryBean 和 BeanFactory</h4><p>BeanFactory接⼝是容器的顶级接⼝，定义了容器的⼀些基础⾏为，负责⽣产和管理Bean的⼀个⼯⼚，<br>具体使⽤它下⾯的⼦接⼝类型，⽐如ApplicationContext；此处我们重点分析FactoryBean</p>
-<p>Spring中Bean有两种，⼀种是普通Bean，⼀种是⼯⼚Bean（FactoryBean），FactoryBean可以⽣成<br>某⼀个类型的Bean实例（返回给我们），也就是说我们可以借助于它⾃定义Bean的创建过程。</p>
-<p>自定义FactoryBean </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 可以让我们⾃定义Bean的创建过程（完成复杂Bean的定义）</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FactoryBean</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="comment">// 返回FactoryBean创建的Bean实例，如果isSingleton返回true，</span></span><br><span class="line">    <span class="comment">//则该实例会放到Spring容器的单例对象缓存池中Map</span></span><br><span class="line">    <span class="function">T <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="comment">// 返回FactoryBean创建的Bean类型</span></span><br><span class="line">    Class&lt;?&gt; getObjectType();</span><br><span class="line">    <span class="comment">// 返回作⽤域是否单例</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">boolean</span> <span class="title">isSingleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  	  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="后置处理器"><a href="#后置处理器" class="headerlink" title="后置处理器"></a>后置处理器</h4><p>Spring提供了两种后处理bean的扩展接⼝, 分别为 BeanPostProcessor 和BeanFactoryPostProcessor，两者在使⽤上是有所区别的。⼯⼚初始化（BeanFactory）—&gt; Bean, 对象在BeanFactory初始化之后可以使⽤BeanFactoryPostProcessor进⾏后置处理, 做⼀些事情在Bean对象实例化（并不是Bean的整个⽣命周期完成）之后可以使⽤BeanPostProcessor进⾏后置处理做⼀些事情<br>注意：对象不⼀定是springbean，⽽springbean⼀定是个对象</p>
-<h3 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h3><p>有五种自动装配方式, 可以用来知道Spring容器用自动装配方式来依赖注入:</p>
-<ul>
-<li><strong>no</strong>: 默认不进行自动装配, 通过显式设置ref属性来进行装配</li>
-<li><strong>byName</strong>: 通过参数名自动装配, Spring容器在配置文件中发现bean的autowire属性被设置成byName,止呕容器试图装配和该bean的属性具有相同名字的bean</li>
-<li><strong>byType</strong>: 通过参数类型自动装配, Spring容器在配置文件中发现bean的autowire属性被设置成byType，之后容器试图匹配、装配和该bean的属性具有相同类型的bean。如果有多个bean符合条件，则抛出错误。</li>
-<li><strong>constructor</strong>：这个方式类似于byType，但是要提供给构造器参数，如果没有确定的带参数的构造器参数类型，将会抛出异常。</li>
-<li><strong>autodetect</strong>：首先尝试使用constructor来自动装配，如果无法工作，则使用byType方式。</li>
-</ul>
-<h2 id="SpringAOP及应用"><a href="#SpringAOP及应用" class="headerlink" title="SpringAOP及应用"></a>SpringAOP及应用</h2><h3 id="AOP的实现"><a href="#AOP的实现" class="headerlink" title="AOP的实现"></a>AOP的实现</h3><p>Spring 实现AOP思想使⽤的是动态代理技术<br>默认情况下，Spring会根据被代理对象是否实现接⼝来选择使⽤JDK还是CGLIB。当被代理对象没有实现<br>任何接⼝时，Spring会选择CGLIB。当被代理对象实现了接⼝，Spring会选择JDK官⽅的代理技术，不过<br>我们可以通过配置的⽅式，让Spring强制使⽤CGLIB</p>
-<h3 id="Spring-声明式事务的⽀持"><a href="#Spring-声明式事务的⽀持" class="headerlink" title="Spring 声明式事务的⽀持"></a>Spring 声明式事务的⽀持</h3><p><strong>编程式事务</strong>：在业务代码中添加事务控制代码，这样的事务控制机制就叫做编程式事务<br>        <strong>声明式事务</strong>：通过xml或者注解配置的⽅式达到事务控制的⽬的，叫做声明式事务</p>
-<h4 id="事务的四大特性"><a href="#事务的四大特性" class="headerlink" title="事务的四大特性"></a>事务的四大特性</h4><ul>
-<li><p>原⼦性（Atomicity） 原⼦性是指事务是⼀个不可分割的⼯作单位，事务中的操作要么都发⽣，要么都<br>不发⽣。从操作的⻆度来描述，事务中的各个操作要么都成功要么都失败</p>
-</li>
-<li><p>⼀致性（Consistency）事务必须使数据库从⼀个⼀致性状态变换到另外⼀个⼀致性状态。<br>例如转账前A有1000，B有1000。转账后A+B也得是2000。<br>⼀致性是从数据的⻆度来说的，（1000，1000） （900，1100），不应该出现（900，1000）</p>
-</li>
-<li><p>隔离性（Isolation）事务的隔离性是多个⽤户并发访问数据库时，数据库为每⼀个⽤户开启的事务，<br>每个事务不能被其他事务的操作数据所⼲扰，多个并发事务之间要相互隔离。<br>⽐如：事务1给员⼯涨⼯资2000，但是事务1尚未被提交，员⼯发起事务2查询⼯资，发现⼯资涨了2000<br>块钱，读到了事务1尚未提交的数据（脏读）</p>
-</li>
-<li><p>持久性（Durability）持久性是指⼀个事务⼀旦被提交，它对数据库中数据的改变就是永久性的，接下来即使数据库发⽣故障<br>也不应该对其有任何影响。</p>
-</li>
-</ul>
-<h4 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h4><ul>
-<li><p>Serializable（串⾏化）：可避免脏读、不可重复读、虚读情况的发⽣。（串⾏化） 最⾼</p>
-</li>
-<li><p>Repeatable read（可重复读）：可避免脏读、不可重复读情况的发⽣。(幻读有可能发⽣) 第⼆<br>该机制下会对要update的⾏进⾏加锁</p>
-</li>
-<li><p>Read committed（读已提交）：可避免脏读情况发⽣。不可重复读和幻读⼀定会发⽣。 第三</p>
-</li>
-<li><p>Read uncommitted（读未提交）：最低级别，以上情况均⽆法保证。(读未提交) 最低</p>
-<table>
-<thead>
-<tr>
-<th>事务隔离级别</th>
-<th>脏读</th>
-<th>不可重复度</th>
-<th>幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Read uncommitted（读未提交）</td>
-<td>是</td>
-<td>是</td>
-<td>是</td>
-</tr>
-<tr>
-<td>Read committed（读已提交)</td>
-<td>否</td>
-<td>是</td>
-<td>是</td>
-</tr>
-<tr>
-<td>Repeatable read（可重复读）</td>
-<td>否</td>
-<td>否</td>
-<td>是</td>
-</tr>
-<tr>
-<td>Serializable(串行化)</td>
-<td>否</td>
-<td>否</td>
-<td>否</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<h2 id="Spring设计模式"><a href="#Spring设计模式" class="headerlink" title="Spring设计模式"></a>Spring设计模式</h2><ul>
-<li><p><strong>工厂设计模式</strong>:  BeanFactory, ApplicationContext 通过工厂模式创建对象</p>
-</li>
-<li><p><strong>代理设计模式</strong>:  SrpingAOP 用到了JDK动态代理和CGLIB动态代理</p>
-</li>
-<li><p><strong>单例设计模式</strong>:  bean默认都是单例</p>
-</li>
-<li><p><strong>模板方法模式</strong>:  jdbcTemplate, hibernateTemplate 等以Template结尾的对数据库操作的类,用到了模板设计模式</p>
-</li>
-<li><p><strong>包装器设计模式</strong>:  动态数据源的支持</p>
-</li>
-<li><p><strong>观察者设计模式</strong>:   Spring时间驱动模型</p>
-</li>
-<li><p><strong>适配器模式</strong>:   SpringAOP的增强或者通知(Advice)使用了适配器模式, SpringMVC也是用到了该模式适配Controller</p>
-</li>
-</ul>
 ]]></content>
   </entry>
 </search>
