@@ -27,18 +27,18 @@
 <meta property="og:site_name" content="大肥猫的博客">
 <meta property="og:description" content="SpringMVC &amp; JPASpringMVC工作流程开发过程 配置DispatcherServlet前端控制器 开发处理具体业务逻辑的Handler（@Controller、@RequestMapping） xml配置⽂件配置controller扫描，配置springmvc三⼤件 将xml⽂件路径告诉springmvc（DispatcherServlet）  SpringMVC 请求处">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/SpringMVC%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg">
-<meta property="og:image" content="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg">
-<meta property="og:image" content="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/%E5%A4%9A%E4%B8%AA%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg">
-<meta property="og:image" content="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/JPA.jpg">
+<meta property="og:image" content="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA/SpringMVC%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg">
+<meta property="og:image" content="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA//%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg">
+<meta property="og:image" content="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA//%E5%A4%9A%E4%B8%AA%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg">
+<meta property="og:image" content="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA//JPA.jpg">
 <meta property="article:published_time" content="2020-05-07T09:26:01.000Z">
-<meta property="article:modified_time" content="2020-05-07T06:50:05.418Z">
+<meta property="article:modified_time" content="2020-05-07T08:33:11.771Z">
 <meta property="article:author" content="KenChan">
 <meta property="article:tag" content="Spring">
 <meta property="article:tag" content="SpringMVC">
 <meta property="article:tag" content="JPA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/SpringMVC%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg">
+<meta name="twitter:image" content="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA/SpringMVC%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg">
 
 <link rel="canonical" href="https://kenchan8848.gitee.io/blog/2020/05/07/SpringMVC%E4%B8%8EJPA/">
 
@@ -229,7 +229,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：14:50:05" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
+              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：16:33:11" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -265,7 +265,7 @@
 <li>xml配置⽂件配置controller扫描，配置springmvc三⼤件</li>
 <li>将xml⽂件路径告诉springmvc（DispatcherServlet）</li>
 </ol>
-<h3 id="SpringMVC-请求处理流程"><a href="#SpringMVC-请求处理流程" class="headerlink" title="SpringMVC 请求处理流程"></a>SpringMVC 请求处理流程</h3><p><img src="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/SpringMVC%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg" alt=""></p>
+<h3 id="SpringMVC-请求处理流程"><a href="#SpringMVC-请求处理流程" class="headerlink" title="SpringMVC 请求处理流程"></a>SpringMVC 请求处理流程</h3><p><img src="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA/SpringMVC%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg" alt=""></p>
 <p>第⼀步：⽤户发送请求⾄前端控制器DispatcherServlet</p>
 <p>第⼆步：DispatcherServlet收到请求调⽤HandlerMapping处理器映射器</p>
 <p>第三步：处理器映射器根据请求Url找到具体的Handler（后端控制器），⽣成处理器对象及处理器拦截<br>器(如果 有则⽣成)⼀并返回DispatcherServlet</p>
@@ -324,13 +324,13 @@
 </ul>
 </li>
 </ul>
-<h3 id="拦截器的执⾏流程"><a href="#拦截器的执⾏流程" class="headerlink" title="拦截器的执⾏流程"></a>拦截器的执⾏流程</h3><p><img src="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg" alt="单个拦截器执行流程"></p>
+<h3 id="拦截器的执⾏流程"><a href="#拦截器的执⾏流程" class="headerlink" title="拦截器的执⾏流程"></a>拦截器的执⾏流程</h3><p><img src="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA//%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg" alt="单个拦截器执行流程"></p>
 <ol>
 <li>程序先执⾏preHandle()⽅法，如果该⽅法的返回值为true，则程序会继续向下执⾏处理器中的⽅<br>法，否则将不再向下执⾏。</li>
 <li>在业务处理器（即控制器Controller类）处理完请求后，会执⾏postHandle()⽅法，然后会通过<br>DispatcherServlet向客户端返回响应。</li>
 <li>在DispatcherServlet处理完请求后，才会执⾏afterCompletion()⽅法。</li>
 </ol>
-<h3 id="多个拦截器的执⾏流程"><a href="#多个拦截器的执⾏流程" class="headerlink" title="多个拦截器的执⾏流程"></a>多个拦截器的执⾏流程</h3><p><img src="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/%E5%A4%9A%E4%B8%AA%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg" alt="多个拦截器执行流程"></p>
+<h3 id="多个拦截器的执⾏流程"><a href="#多个拦截器的执⾏流程" class="headerlink" title="多个拦截器的执⾏流程"></a>多个拦截器的执⾏流程</h3><p><img src="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA//%E5%A4%9A%E4%B8%AA%E6%8B%A6%E6%88%AA%E5%99%A8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.jpg" alt="多个拦截器执行流程"></p>
 <p>从图可以看出，当有多个拦截器同时⼯作时，它们的preHandle()⽅法会按照配置⽂件中拦截器的配置<br>顺序执⾏，⽽它们的postHandle()⽅法和afterCompletion()⽅法则会按照配置顺序的反序执⾏。</p>
 <h2 id="SpringMVC-源码"><a href="#SpringMVC-源码" class="headerlink" title="SpringMVC 源码"></a>SpringMVC 源码</h2><h3 id="核心流程"><a href="#核心流程" class="headerlink" title="核心流程"></a>核心流程</h3><ul>
 <li>SpringMVC处理请求的流程即为<br>org.springframework.web.servlet.DispatcherServlet#doDispatch⽅法的执⾏过程，其中步骤<br>2、3、4、5是核⼼步骤<br>1）调⽤getHandler()获取到能够处理当前请求的执⾏链 HandlerExecutionChain（Handler+拦截<br>器）<br>但是如何去getHandler的？后⾯进⾏分析<br>2）调⽤getHandlerAdapter()；获取能够执⾏1）中Handler的适配器<br>但是如何去getHandlerAdapter的？后⾯进⾏分析<br>3）适配器调⽤Handler执⾏ha.handle（总会返回⼀个ModelAndView对象）<br>4）调⽤processDispatchResult()⽅法完成视图渲染跳转</li>
@@ -368,7 +368,7 @@
 
 
 <h2 id="Spring-Data-JPA"><a href="#Spring-Data-JPA" class="headerlink" title="Spring Data JPA"></a>Spring Data JPA</h2><p>Spring Data JPA 是 Spring 提供的⼀个封装了JPA 操作的框架，⽽ JPA 仅仅是规范，单独使⽤规范⽆法<br>具体做什么，那么Spring Data JPA 、 JPA规范 以及 Hibernate （JPA 规范的⼀种实现）之间的关系是什<br>么？</p>
-<p><img src="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/JPA.jpg" alt="JPA"></p>
+<p><img src="https://gitee.com/KenChan8848/images/raw/master/SpringMVC%E4%B8%8EJPA//JPA.jpg" alt="JPA"></p>
 <p>JPA 是⼀套规范，内部是由接⼝和抽象类组成的，Hiberanate 是⼀套成熟的 ORM 框架，⽽且<br>Hiberanate 实现了 JPA 规范，所以可以称 Hiberanate 为 JPA 的⼀种实现⽅式，我们使⽤ JPA 的 API 编<br>程，意味着站在更⾼的⻆度去看待问题（⾯向接⼝编程）。</p>
 
     </div>
@@ -407,12 +407,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2020/05/07/%E4%B8%80%E4%B8%AAjava%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E6%8E%92%E6%9F%A5%E6%A1%88%E4%BE%8B/" rel="prev" title="一个java内存泄漏的排查案例">
-      <i class="fa fa-chevron-left"></i> 一个java内存泄漏的排查案例
+    <a href="/blog/2020/05/07/mybatis%E6%80%BB%E7%BB%93/" rel="prev" title="mybatis">
+      <i class="fa fa-chevron-left"></i> mybatis
     </a></div>
       <div class="post-nav-item">
-    <a href="/blog/2020/05/07/mybatis%E6%80%BB%E7%BB%93/" rel="next" title="mybatis">
-      mybatis <i class="fa fa-chevron-right"></i>
+    <a href="/blog/2020/05/07/Spring%20Core%E6%80%BB%E7%BB%93/" rel="next" title="Spring">
+      Spring <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
