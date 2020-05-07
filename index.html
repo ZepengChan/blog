@@ -208,6 +208,10 @@
         <div class="post-meta">
 
         	 
+    				<i class="fa fa-thumb-tack"></i>
+   					 <font color=7D26CD>置顶</font>
+    				<span class="post-meta-divider">|</span>
+			 
             <span class="post-meta-item">
            		
               <span class="post-meta-item-icon">
@@ -216,7 +220,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：14:35:42" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
+              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：14:44:35" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -367,322 +371,6 @@
 <li><p><strong>观察者设计模式</strong>:   Spring时间驱动模型</p>
 </li>
 <li><p><strong>适配器模式</strong>:   SpringAOP的增强或者通知(Advice)使用了适配器模式, SpringMVC也是用到了该模式适配Controller</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://kenchan8848.gitee.io/blog/2020/05/07/mybatis%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/logo.jpg">
-      <meta itemprop="name" content="KenChan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="大肥猫的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/05/07/mybatis%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">mybatis</a>
-        </h2>
-
-        <div class="post-meta">
-
-        	 
-            <span class="post-meta-item">
-           		
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：14:35:28" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="mybatis学习笔记"><a href="#mybatis学习笔记" class="headerlink" title="mybatis学习笔记"></a>mybatis学习笔记</h1><h3 id="mybatis解决JDBC的问题"><a href="#mybatis解决JDBC的问题" class="headerlink" title="mybatis解决JDBC的问题:"></a>mybatis解决JDBC的问题:</h3><p>1.数据库连接创建, 释放频繁造成系统资源的浪费</p>
-<p>2.sql语句在代码中硬编码, 造成代码不易维护, 实际使用中sql变化比较大, 改变sql需要改变java代码.</p>
-<p>3.使用preparedStatement向有占位符传参存在硬编码</p>
-<p>4.对结果集封装也存在硬编码.</p>
-<p>解决: mybatis 提供连接池, 通过配置文件解决硬编码,  通过反射内省自动封装结果集</p>
-<h3 id="自定义框架设计"><a href="#自定义框架设计" class="headerlink" title="自定义框架设计:"></a>自定义框架设计:</h3><h5 id="大概流程"><a href="#大概流程" class="headerlink" title="大概流程:"></a>大概流程:</h5><p>1.加载xml配置文件,封装成configuration对象(封装了数据库连接池的相关信息,以及所有配置文件的信息)</p>
-<p>2.将配置文件中,以namespace.statementId为唯一表示,存放到map中,value为具体需要执行的,自己封装的mappedStatement(封装了数据库的连接)</p>
-<p>3.在执行相对应的方法,通过传入的namespace.statementId获取对应的mappedStatement,注册驱动,获取连接,解析sql,填充参数,最后执行. 或者使用mapper的动态代理对象,直接调用相对应的方法执行.这里需要满足statementId与接口的方法名相同</p>
-<h5 id="框架核心所运用的设计模式"><a href="#框架核心所运用的设计模式" class="headerlink" title="框架核心所运用的设计模式:"></a>框架核心所运用的设计模式:</h5><p>构建者设计模式( 当一个复杂对象在初始化过于复杂时,我们使用该设计模式,一步一步构建小对象,最后构成复杂对象)</p>
-<p>工厂设计模式(创建对象的工作在工厂方法代码里面,根据传入参数的不同,获取不通的对象)</p>
-<p>代理模式(对象的方法执行由代理对象完成)</p>
-<p>JDK动态代理:由代理模式衍生出来. 需要满足, 代理的对象实现了接口. 最终生成的代理对象,每次执行方法,都会去调用invoke(),这样就可以在方法执行前后,我们对方法进行增长.</p>
-<h3 id="mybatis动态sql"><a href="#mybatis动态sql" class="headerlink" title="mybatis动态sql:"></a>mybatis动态sql:</h3><p> mybatis动态sql是当我们的业务逻辑比较复杂时,需要将sql动态变化,根据我们传入的实体类或者参数,使用不同的sql语言进行查询.</p>
-<p>​    动态sql: </p>
-<ol>
-<li><p>if 语句 (简单的条件判断)</p>
-</li>
-<li><p>choose(when, otherwize)</p>
-</li>
-<li><p>trim (对包含的内容加上 prefix,或者 suffix 等，前缀，后缀)</p>
-</li>
-<li><p>where (主要是用来简化sql语句中where条件判断的，能智能的处理 and or )</p>
-</li>
-<li><p>set (用于update)</p>
-</li>
-<li><p>foreach (用于 in语句)</p>
-<p>原理:</p>
-<p>mybatis将xml的sql语句封装成一个个节点,每个节点都是一种动态sql类型的描述,例如  IfSqlNode, 每个动态sql有多个SqlNode构成,都需要实现内部定义的抽象方法apply(), 在sql执行的时候, 这个apply方法会依次执行子节点的apply(), 这样递归执行下去, 构建动态sql中prepareStatement的参数, 并保存最终生成sql的StringBuilder对象. 最终执行 sql</p>
-</li>
-</ol>
-<h3 id="mybatis映射"><a href="#mybatis映射" class="headerlink" title="mybatis映射:"></a>mybatis映射:</h3><h5 id="一对一"><a href="#一对一" class="headerlink" title="一对一:"></a>一对一:</h5><p>创建映射实体类:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> Date ordertime;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span> total;</span><br><span class="line">    <span class="keyword">private</span> User user;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Date birthday;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建OrderMapper接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OrderMapper</span> </span>&#123;</span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>配置xml文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.lagou.mapper.OrderMapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"orderMap"</span> <span class="attr">type</span>=<span class="string">"com.lagou.domain.Order"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"uid"</span> <span class="attr">property</span>=<span class="string">"user.id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"username"</span> <span class="attr">property</span>=<span class="string">"user.username"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"password"</span> <span class="attr">property</span>=<span class="string">"user.password"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"birthday"</span> <span class="attr">property</span>=<span class="string">"user.birthday"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"findAll"</span> <span class="attr">resultMap</span>=<span class="string">"orderMap"</span>&gt;</span></span><br><span class="line">    select * from orders o,user u where o.uid=u.id</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"orderMap"</span> <span class="attr">type</span>=<span class="string">"com.lagou.domain.Order"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"ordertime"</span> <span class="attr">column</span>=<span class="string">"ordertime"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"total"</span> <span class="attr">column</span>=<span class="string">"total"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">"user"</span> <span class="attr">javaType</span>=<span class="string">"com.lagou.domain.User"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"uid"</span> <span class="attr">property</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"username"</span> <span class="attr">property</span>=<span class="string">"username"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"password"</span> <span class="attr">property</span>=<span class="string">"password"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"birthday"</span> <span class="attr">property</span>=<span class="string">"birthday"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="一对多-多对多类似"><a href="#一对多-多对多类似" class="headerlink" title="一对多(多对多类似):"></a>一对多(多对多类似):</h5><p>修改实体</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> Date ordertime;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span> total;</span><br><span class="line">    <span class="keyword">private</span> User user;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Date birthday;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Order&gt; orderList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建UserMapper接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserMapper</span> </span>&#123;</span><br><span class="line">	<span class="function">List&lt;User&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>配置XML</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.lagou.mapper.UserMapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"userMap"</span> <span class="attr">type</span>=<span class="string">"com.lagou.domain.User"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">property</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"username"</span> <span class="attr">property</span>=<span class="string">"username"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"password"</span> <span class="attr">property</span>=<span class="string">"password"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"birthday"</span> <span class="attr">property</span>=<span class="string">"birthday"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"orderList"</span> <span class="attr">ofType</span>=<span class="string">"com.lagou.domain.Order"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"oid"</span> <span class="attr">property</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"ordertime"</span> <span class="attr">property</span>=<span class="string">"ordertime"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"total"</span> <span class="attr">property</span>=<span class="string">"total"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"findAll"</span> <span class="attr">resultMap</span>=<span class="string">"userMap"</span>&gt;</span></span><br><span class="line">    select *,o.id oid from user u left join orders o on u.id=o.uid</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="mybatis注解开发-代码不做演示"><a href="#mybatis注解开发-代码不做演示" class="headerlink" title="mybatis注解开发(代码不做演示)"></a>mybatis注解开发(代码不做演示)</h3><p>@Insert 新增<br>@Update 更新<br>@Delete 删除<br>@Select 查询<br>@Result 结果映射<br>@Results 与 @Result 封装多个结果集<br>@One 一对一<br>@Many 一堆多或者多对多</p>
-<h3 id="mybatis缓存-一级缓存与二级缓存"><a href="#mybatis缓存-一级缓存与二级缓存" class="headerlink" title="mybatis缓存(一级缓存与二级缓存):"></a>mybatis缓存(一级缓存与二级缓存):</h3><p>  存储结构: 一级缓存跟二级缓存底层的数据结构都是hashMap, 其中key是mybatis自己封装的CacheKey是, 生成方式主要由MappedStatement RowBounds(分页相关对象)  BoundSql 构成.  一级缓存的value主要是保存sql查询之后的结果(包括具体的对象), 重复执行玩一次sql,都获取到同一个对象. 二级缓存缓存的是结果的数据(不能具体到对象), 即获取到不同的对象,但是对象的值是相等的. 如果二级缓存配置的是redisCache,则使用到的是redis中的哈希数据结构.</p>
-<p>​    范围: 一级缓存是针对同一个sqlSession而言,同一个sqlSession查询的内容,缓存共享.  二级缓存是针对整个namespace, 多个sqlSession共享同一个二级缓存</p>
-<p>​    失效场景: 一级缓存和二级缓存每次查询都会进行数据的缓存. 在进行 insert update delet等数据库写操作的时候会清空缓存. 除此之外, 一级缓存,可以手动调用缓存的 clearCache方法清空缓存, 后续有查询操作缓存可以继续使用; 调用 sqlSession.close()方法之后,也会清空缓存,后续缓存不可用.</p>
-<h3 id="mybatis插件"><a href="#mybatis插件" class="headerlink" title="mybatis插件:"></a>mybatis插件:</h3><p>  mybatis四大组件(Executor, StatementHandler, ParameterHandler, ResultSetHandler) 允许对其内部的方法进行拦截, mybatis插件的原理就是拦截器对这些对象内部方法进行拦截.</p>
-<p>​    具体原理: </p>
-<p>在四大组件的对象创建出来后, 每个对象都不是直接返回,而是优先经过interceptorChain.pluginAll(parameterHandler)</p>
-<p>获取到所有的拦截器,调用interceptorChain.pluginAll(parameterHandler)</p>
-<p>为目标对象利用动态代理创建代理对象; 面向切面的方式,拦截到每一个需要拦截的方法,加入业务逻辑,以达到插件的目的.</p>
-<h3 id="mybatis架构原理"><a href="#mybatis架构原理" class="headerlink" title="mybatis架构原理:"></a>mybatis架构原理:</h3><p>分三层:</p>
-<p>(1) API接口层:对外提供使用的接口API, 开发人员通过这些API操作数据库. 接口层收到调用请求就会调用数据处理曾来完成数据的处理</p>
-<p>Mybatis提供两种方式调用API:</p>
-<p>a.使用传统方式(传入namespace.方法id)</p>
-<p>b.通过Mapper代理方式(getMapper())</p>
-<p>(2) 数据处理层: 复制具体的sql操作, sql解析, sql执行,以及执行结果的映射.</p>
-<p>(3) 基础支撑层: 负责最基础的功能支撑,包括连接管理, 事务管理, 配置加载, 缓存处理.</p>
-<h5 id="主要构建及其相互关系"><a href="#主要构建及其相互关系" class="headerlink" title="主要构建及其相互关系"></a>主要构建及其相互关系</h5><table>
-<thead>
-<tr>
-<th>组件</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>SqlSession</td>
-<td>作为mybatis工作的主要顶层api,表示和数据库交互的会话,完成数据库操作</td>
-</tr>
-<tr>
-<td>Executor</td>
-<td>执行器,是调度的核心,负责sql语句的生成和查询缓存</td>
-</tr>
-<tr>
-<td>StatementHandler</td>
-<td>封装了JDBC Statement操作,设置参数已经封装结果为list</td>
-</tr>
-<tr>
-<td>ParameterHandler</td>
-<td>负责设置参数,被StatementHandler调用</td>
-</tr>
-<tr>
-<td>ResultSetHandler</td>
-<td>负责封装结果, 被StatementHandler调用</td>
-</tr>
-<tr>
-<td>TypeHandler</td>
-<td>负责数据库类型与java类型映射</td>
-</tr>
-<tr>
-<td>MappedStatement</td>
-<td>封装了sql语句的节点</td>
-</tr>
-<tr>
-<td>SqlSource</td>
-<td>根据用户传递的parameterObject,动态生成sql语句,将信息封装到BoundSql中</td>
-</tr>
-<tr>
-<td>BoundSql</td>
-<td>表示动态生成的sql语句已经相对应的参数信息</td>
-</tr>
-</tbody></table>
-<h5 id="mybatis执行器"><a href="#mybatis执行器" class="headerlink" title="mybatis执行器:"></a>mybatis执行器:</h5><p> 最基本的有三种:</p>
-<p>​    SimpleExecutor, ReuseExecutor, BathExecutor</p>
-<p>​    严格来讲在mybatis源码中还有 BaseExecutor, CachingExecutor, ClosedExecutor(方法都抛出异常)</p>
-<p>​    区别:</p>
-<p>​    SimpleExecutor 每执行一次update或select，就开启一个Statement对象，用完立刻关闭Statement对象。</p>
-<p>​    ReuseExecutor  执行update或select，以sql作为key查找Statement对象，存在就使用，不存在就创建，用完后，不关闭Statement对象，而是放置于Map内，供下一次使用。简言之，就是重复使用Statement对象。</p>
-<p>​    BathExecutor   执行update（没有select，JDBC批处理不支持select），将所有sql都添加到批处理中（addBatch()），等待统一执行（executeBatch()），它缓存了多个Statement对象，每个Statement对象都是addBatch()完毕后，等待逐一执行executeBatch()批处理。与JDBC批处理相同。</p>
-<h5 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载:"></a>懒加载:</h5><p> 仅支持association关联对象和collection关联集合对象的延迟加载，association指的就是一对一，collection指的就是一对多查询。</p>
-<p>​    原理: 使用CGLIB动态代理,当调用目标方法时,实际上调用的是动态代理对象的invoke方法, 在法相目标方法返回的是null值,那么久会单独执行一次事先保存好的关联相对应对象的sql,将执行结果按照配置文件设置到对一个的字段上,接着完成 相对应的逻辑.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://kenchan8848.gitee.io/blog/2020/05/07/RESTful%20API%E8%AE%BE%E8%AE%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/logo.jpg">
-      <meta itemprop="name" content="KenChan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="大肥猫的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/05/07/RESTful%20API%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">Restful API设计</a>
-        </h2>
-
-        <div class="post-meta">
-
-        	 
-            <span class="post-meta-item">
-           		
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：14:35:02" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Restful-API设计"><a href="#Restful-API设计" class="headerlink" title="Restful API设计"></a>Restful API设计</h1><ul>
-<li><p>rest⻛格请求是什么样的？</p>
-</li>
-<li><p>SpringMVC对rest⻛格请求到底提供了怎样的⽀持<br>是⼀个注解的使⽤@PathVariable，可以帮助我们从uri中取出参数</p>
-</li>
-</ul>
-<h2 id="什么是-RESTful"><a href="#什么是-RESTful" class="headerlink" title="什么是 RESTful"></a>什么是 RESTful</h2><p>Restful 是⼀种 web 软件架构⻛格，它不是标准也不是协议，它倡导的是⼀个资源定位及资源操作的⻛<br>格。</p>
-<h3 id="什么是REST"><a href="#什么是REST" class="headerlink" title="什么是REST"></a>什么是REST</h3><p>REST（英⽂：Representational State Transfer，简称 REST）描述了⼀个架构样式的⽹络系统， ⽐如<br>web 应⽤程序。它⾸次出现在 2000 年 Roy Fielding 的博⼠论⽂中，他是 HTTP 规范的主要编写者之<br>⼀。在⽬前主流的三种 Web 服务交互⽅案中，REST 相⽐于 SOAP（Simple Object Access protocol，<br>简单对象访问协议）以及 XML-RPC 更加简单明了，⽆论是对 URL 的处理还是对 Payload 的编码，<br>REST 都倾向于⽤更加简单轻量的⽅法设计和实现。值得注意的是 REST 并没有⼀个明确的标准，⽽更像<br>是⼀种设计的⻛格。<br>它本身并没有什么实⽤性，其核⼼价值在于如何设计出符合 REST ⻛格的⽹络接⼝。<br>资源 表现层 状态转移</p>
-<h3 id="Restful-的优点"><a href="#Restful-的优点" class="headerlink" title="Restful 的优点"></a>Restful 的优点</h3><p>它结构清晰、符合标准、易于理解、扩展⽅便，所以正得到越来越多⽹站的采⽤。</p>
-<h3 id="Restful-的特性"><a href="#Restful-的特性" class="headerlink" title="Restful 的特性"></a>Restful 的特性</h3><ul>
-<li>资源（Resources）：⽹络上的⼀个实体，或者说是⽹络上的⼀个具体信息。<br>它可以是⼀段⽂本、⼀张图⽚、⼀⾸歌曲、⼀种服务，总之就是⼀个具体的存在。可以⽤⼀个 URI（统<br>⼀资源定位符）指向它，每种资源对应⼀个特定的 URI 。要获取这个资源，访问它的 URI 就可以，因此<br>URI 即为每⼀个资源的独⼀⽆⼆的识别符。</li>
-<li>表现层（Representation）：把资源具体呈现出来的形式，叫做它的表现层 （Representation）。⽐<br>如，⽂本可以⽤ txt 格式表现，也可以⽤ HTML 格式、XML 格式、JSON 格式表现，甚⾄可以采⽤⼆进<br>制格式。</li>
-<li>状态转化（State Transfer）：每发出⼀个请求，就代表了客户端和服务器的⼀次交互过程。<br>HTTP 协议，是⼀个⽆状态协议，即所有的状态都保存在服务器端。因此，如果客户端想要操作服务<br>器， 必须通过某种⼿段，让服务器端发⽣“状态转化”（State Transfer）。⽽这种转化是建⽴在表现层<br>之上的，所以就是 “ 表现层状态转化” 。具体说， 就是 HTTP 协议⾥⾯，四个表示操作⽅式的动词：<br>GET 、POST 、PUT 、DELETE 。它们分别对应四种基本操作：GET ⽤来获取资源，POST ⽤来新建资<br>源，PUT ⽤来更新资源，DELETE ⽤来删除资源。</li>
-</ul>
-<h3 id="RESTful-的示例"><a href="#RESTful-的示例" class="headerlink" title="RESTful 的示例"></a>RESTful 的示例</h3><ul>
-<li><p>rest是⼀个url请求的⻛格，基于这种⻛格设计请求的url<br>没有rest的话，原有的url设计<a href="http://localhost:8080/user/queryUserById.action?id=3" target="_blank" rel="noopener">http://localhost:8080/user/queryUserById.action?id=3</a> url中定义了动作（操作），参数具体锁定到操作的是谁</p>
-</li>
-<li><p>有了rest⻛格之后<br>rest中，认为互联⽹中的所有东⻄都是资源，既然是资源就会有⼀个唯⼀的uri标识它，代表它<a href="http://localhost:8080/user/3" target="_blank" rel="noopener">http://localhost:8080/user/3</a> 代表的是id为3的那个⽤户记录（资源）锁定资源之后如何操作它呢？常规操作就是增删改查 根据请求⽅式不同，代表要做不同的操作</p>
-</li>
-<li><p>get 查询，获取资源</p>
-</li>
-<li><p>post 增加，新建资源</p>
-</li>
-<li><p>put 更新</p>
-</li>
-<li><p>delete 删除资源</p>
-</li>
-<li><p>rest⻛格带来的直观体现：就是传递参数⽅式的变化，参数可以在uri中了</p>
-<p>/account/1 HTTP GET ：得到 id = 1 的 account<br>/account/1 HTTP DELETE：删除 id = 1 的 account<br>/account/1 HTTP PUT：更新 id = 1 的 account<br>URL：资源定位符，通过URL地址去定位互联⽹中的资源（抽象的概念，⽐如图⽚、视频、app服务<br>等）。</p>
-<p><strong>RESTful ⻛格 URL</strong>：互联⽹所有的事物都是资源，要求URL中只有表示资源的名称，没有动词。<br><strong>RESTful⻛格资源操作</strong>：使⽤HTTP请求中的method⽅法put、delete、post、get来操作资源。分别对<br>应添加、删除、修改、查询。不过⼀般使⽤时还是 post 和 get。put 和 delete⼏乎不使⽤。<br><strong>RESTful ⻛格资源表述</strong>：可以根据需求对URL定位的资源返回不同的表述（也就是返回数据类型，⽐如<br>XML、JSON等数据格式）。</p>
-<p>Spring MVC ⽀持 RESTful ⻛格请求，具体讲的就是使⽤ @PathVariable 注解获取 RESTful ⻛格的请求<br>URL中的路径变量。</p>
-</li>
-</ul>
-<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><ul>
-<li><p>前端jsp</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>SpringMVC对Restful⻛格url的⽀持<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fieldset</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>测试⽤例：SpringMVC对Restful⻛格url的⽀持<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/demo/handle/15"</span>&gt;</span>rest_get测试<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">action</span>=<span class="string">"/demo/handle"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"username"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交rest_post请求"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">action</span>=<span class="string">"/demo/handle/15/lisi"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"_method"</span> <span class="attr">value</span>=<span class="string">"put"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交rest_put请求"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">action</span>=<span class="string">"/demo/handle/15"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"_method"</span> <span class="attr">value</span>=<span class="string">"delete"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交rest_delete请求"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>后台Handler方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful get /demo/handle/15</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle/&#123;id&#125;"</span>,method =&#123;RequestMethod.GET&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handleGet</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> Integer id) </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful post /demo/handle</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle"</span>,method = &#123;RequestMethod.POST&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handlePost</span><span class="params">(String username)</span> </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful put /demo/handle/15/lisi</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle/&#123;id&#125;/&#123;name&#125;"</span>,method =&#123;RequestMethod.PUT&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handlePut</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> Integer</span></span><br><span class="line"><span class="function">    id,@<span class="title">PathVariable</span><span class="params">(<span class="string">"name"</span>)</span> String username) </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful delete /demo/handle/15</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle/&#123;id&#125;"</span>,method =&#123;RequestMethod.DELETE&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handleDelete</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> Integer id) </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ul>
-<ul>
-<li><p>web.xml中配置请求⽅式过滤器（将特定的post请求转换为put和delete请求）</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--配置springmvc请求⽅式转换过滤器，会检查请求参数中是否有_method参数，如果有就</span></span><br><span class="line"><span class="comment">按照指定的请求⽅式进⾏转换--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>hiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>hiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
 </li>
 </ul>
 
@@ -870,6 +558,330 @@
 <h2 id="Spring-Data-JPA"><a href="#Spring-Data-JPA" class="headerlink" title="Spring Data JPA"></a>Spring Data JPA</h2><p>Spring Data JPA 是 Spring 提供的⼀个封装了JPA 操作的框架，⽽ JPA 仅仅是规范，单独使⽤规范⽆法<br>具体做什么，那么Spring Data JPA 、 JPA规范 以及 Hibernate （JPA 规范的⼀种实现）之间的关系是什<br>么？</p>
 <p><img src="https://gitee.com/KenChan8848/stage_1_module_3_notes/raw/master/image/JPA.jpg" alt="JPA"></p>
 <p>JPA 是⼀套规范，内部是由接⼝和抽象类组成的，Hiberanate 是⼀套成熟的 ORM 框架，⽽且<br>Hiberanate 实现了 JPA 规范，所以可以称 Hiberanate 为 JPA 的⼀种实现⽅式，我们使⽤ JPA 的 API 编<br>程，意味着站在更⾼的⻆度去看待问题（⾯向接⼝编程）。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://kenchan8848.gitee.io/blog/2020/05/07/RESTful%20API%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/logo.jpg">
+      <meta itemprop="name" content="KenChan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大肥猫的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/2020/05/07/RESTful%20API%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">Restful API设计</a>
+        </h2>
+
+        <div class="post-meta">
+
+        	 
+    				<i class="fa fa-thumb-tack"></i>
+   					 <font color=7D26CD>置顶</font>
+    				<span class="post-meta-divider">|</span>
+			 
+            <span class="post-meta-item">
+           		
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：14:44:26" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Restful-API设计"><a href="#Restful-API设计" class="headerlink" title="Restful API设计"></a>Restful API设计</h1><ul>
+<li><p>rest⻛格请求是什么样的？</p>
+</li>
+<li><p>SpringMVC对rest⻛格请求到底提供了怎样的⽀持<br>是⼀个注解的使⽤@PathVariable，可以帮助我们从uri中取出参数</p>
+</li>
+</ul>
+<h2 id="什么是-RESTful"><a href="#什么是-RESTful" class="headerlink" title="什么是 RESTful"></a>什么是 RESTful</h2><p>Restful 是⼀种 web 软件架构⻛格，它不是标准也不是协议，它倡导的是⼀个资源定位及资源操作的⻛<br>格。</p>
+<h3 id="什么是REST"><a href="#什么是REST" class="headerlink" title="什么是REST"></a>什么是REST</h3><p>REST（英⽂：Representational State Transfer，简称 REST）描述了⼀个架构样式的⽹络系统， ⽐如<br>web 应⽤程序。它⾸次出现在 2000 年 Roy Fielding 的博⼠论⽂中，他是 HTTP 规范的主要编写者之<br>⼀。在⽬前主流的三种 Web 服务交互⽅案中，REST 相⽐于 SOAP（Simple Object Access protocol，<br>简单对象访问协议）以及 XML-RPC 更加简单明了，⽆论是对 URL 的处理还是对 Payload 的编码，<br>REST 都倾向于⽤更加简单轻量的⽅法设计和实现。值得注意的是 REST 并没有⼀个明确的标准，⽽更像<br>是⼀种设计的⻛格。<br>它本身并没有什么实⽤性，其核⼼价值在于如何设计出符合 REST ⻛格的⽹络接⼝。<br>资源 表现层 状态转移</p>
+<h3 id="Restful-的优点"><a href="#Restful-的优点" class="headerlink" title="Restful 的优点"></a>Restful 的优点</h3><p>它结构清晰、符合标准、易于理解、扩展⽅便，所以正得到越来越多⽹站的采⽤。</p>
+<h3 id="Restful-的特性"><a href="#Restful-的特性" class="headerlink" title="Restful 的特性"></a>Restful 的特性</h3><ul>
+<li>资源（Resources）：⽹络上的⼀个实体，或者说是⽹络上的⼀个具体信息。<br>它可以是⼀段⽂本、⼀张图⽚、⼀⾸歌曲、⼀种服务，总之就是⼀个具体的存在。可以⽤⼀个 URI（统<br>⼀资源定位符）指向它，每种资源对应⼀个特定的 URI 。要获取这个资源，访问它的 URI 就可以，因此<br>URI 即为每⼀个资源的独⼀⽆⼆的识别符。</li>
+<li>表现层（Representation）：把资源具体呈现出来的形式，叫做它的表现层 （Representation）。⽐<br>如，⽂本可以⽤ txt 格式表现，也可以⽤ HTML 格式、XML 格式、JSON 格式表现，甚⾄可以采⽤⼆进<br>制格式。</li>
+<li>状态转化（State Transfer）：每发出⼀个请求，就代表了客户端和服务器的⼀次交互过程。<br>HTTP 协议，是⼀个⽆状态协议，即所有的状态都保存在服务器端。因此，如果客户端想要操作服务<br>器， 必须通过某种⼿段，让服务器端发⽣“状态转化”（State Transfer）。⽽这种转化是建⽴在表现层<br>之上的，所以就是 “ 表现层状态转化” 。具体说， 就是 HTTP 协议⾥⾯，四个表示操作⽅式的动词：<br>GET 、POST 、PUT 、DELETE 。它们分别对应四种基本操作：GET ⽤来获取资源，POST ⽤来新建资<br>源，PUT ⽤来更新资源，DELETE ⽤来删除资源。</li>
+</ul>
+<h3 id="RESTful-的示例"><a href="#RESTful-的示例" class="headerlink" title="RESTful 的示例"></a>RESTful 的示例</h3><ul>
+<li><p>rest是⼀个url请求的⻛格，基于这种⻛格设计请求的url<br>没有rest的话，原有的url设计<a href="http://localhost:8080/user/queryUserById.action?id=3" target="_blank" rel="noopener">http://localhost:8080/user/queryUserById.action?id=3</a> url中定义了动作（操作），参数具体锁定到操作的是谁</p>
+</li>
+<li><p>有了rest⻛格之后<br>rest中，认为互联⽹中的所有东⻄都是资源，既然是资源就会有⼀个唯⼀的uri标识它，代表它<a href="http://localhost:8080/user/3" target="_blank" rel="noopener">http://localhost:8080/user/3</a> 代表的是id为3的那个⽤户记录（资源）锁定资源之后如何操作它呢？常规操作就是增删改查 根据请求⽅式不同，代表要做不同的操作</p>
+</li>
+<li><p>get 查询，获取资源</p>
+</li>
+<li><p>post 增加，新建资源</p>
+</li>
+<li><p>put 更新</p>
+</li>
+<li><p>delete 删除资源</p>
+</li>
+<li><p>rest⻛格带来的直观体现：就是传递参数⽅式的变化，参数可以在uri中了</p>
+<p>/account/1 HTTP GET ：得到 id = 1 的 account<br>/account/1 HTTP DELETE：删除 id = 1 的 account<br>/account/1 HTTP PUT：更新 id = 1 的 account<br>URL：资源定位符，通过URL地址去定位互联⽹中的资源（抽象的概念，⽐如图⽚、视频、app服务<br>等）。</p>
+<p><strong>RESTful ⻛格 URL</strong>：互联⽹所有的事物都是资源，要求URL中只有表示资源的名称，没有动词。<br><strong>RESTful⻛格资源操作</strong>：使⽤HTTP请求中的method⽅法put、delete、post、get来操作资源。分别对<br>应添加、删除、修改、查询。不过⼀般使⽤时还是 post 和 get。put 和 delete⼏乎不使⽤。<br><strong>RESTful ⻛格资源表述</strong>：可以根据需求对URL定位的资源返回不同的表述（也就是返回数据类型，⽐如<br>XML、JSON等数据格式）。</p>
+<p>Spring MVC ⽀持 RESTful ⻛格请求，具体讲的就是使⽤ @PathVariable 注解获取 RESTful ⻛格的请求<br>URL中的路径变量。</p>
+</li>
+</ul>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><ul>
+<li><p>前端jsp</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>SpringMVC对Restful⻛格url的⽀持<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fieldset</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>测试⽤例：SpringMVC对Restful⻛格url的⽀持<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/demo/handle/15"</span>&gt;</span>rest_get测试<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">action</span>=<span class="string">"/demo/handle"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"username"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交rest_post请求"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">action</span>=<span class="string">"/demo/handle/15/lisi"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"_method"</span> <span class="attr">value</span>=<span class="string">"put"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交rest_put请求"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">action</span>=<span class="string">"/demo/handle/15"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"_method"</span> <span class="attr">value</span>=<span class="string">"delete"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交rest_delete请求"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>后台Handler方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful get /demo/handle/15</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle/&#123;id&#125;"</span>,method =&#123;RequestMethod.GET&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handleGet</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> Integer id) </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful post /demo/handle</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle"</span>,method = &#123;RequestMethod.POST&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handlePost</span><span class="params">(String username)</span> </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful put /demo/handle/15/lisi</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle/&#123;id&#125;/&#123;name&#125;"</span>,method =&#123;RequestMethod.PUT&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handlePut</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> Integer</span></span><br><span class="line"><span class="function">    id,@<span class="title">PathVariable</span><span class="params">(<span class="string">"name"</span>)</span> String username) </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* restful delete /demo/handle/15</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/handle/&#123;id&#125;"</span>,method =&#123;RequestMethod.DELETE&#125;)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">handleDelete</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> Integer id) </span>&#123;</span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    modelAndView.addObject(<span class="string">"date"</span>,date);</span><br><span class="line">    modelAndView.setViewName(<span class="string">"success"</span>);</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>web.xml中配置请求⽅式过滤器（将特定的post请求转换为put和delete请求）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--配置springmvc请求⽅式转换过滤器，会检查请求参数中是否有_method参数，如果有就</span></span><br><span class="line"><span class="comment">按照指定的请求⽅式进⾏转换--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>hiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>hiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://kenchan8848.gitee.io/blog/2020/05/07/mybatis%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/logo.jpg">
+      <meta itemprop="name" content="KenChan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大肥猫的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/2020/05/07/mybatis%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">mybatis</a>
+        </h2>
+
+        <div class="post-meta">
+
+        	 
+    				<i class="fa fa-thumb-tack"></i>
+   					 <font color=7D26CD>置顶</font>
+    				<span class="post-meta-divider">|</span>
+			 
+            <span class="post-meta-item">
+           		
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-07 17:26:01 / 修改时间：14:44:16" itemprop="dateCreated datePublished" datetime="2020-05-07T17:26:01+08:00">2020-05-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="mybatis学习笔记"><a href="#mybatis学习笔记" class="headerlink" title="mybatis学习笔记"></a>mybatis学习笔记</h1><h3 id="mybatis解决JDBC的问题"><a href="#mybatis解决JDBC的问题" class="headerlink" title="mybatis解决JDBC的问题:"></a>mybatis解决JDBC的问题:</h3><p>1.数据库连接创建, 释放频繁造成系统资源的浪费</p>
+<p>2.sql语句在代码中硬编码, 造成代码不易维护, 实际使用中sql变化比较大, 改变sql需要改变java代码.</p>
+<p>3.使用preparedStatement向有占位符传参存在硬编码</p>
+<p>4.对结果集封装也存在硬编码.</p>
+<p>解决: mybatis 提供连接池, 通过配置文件解决硬编码,  通过反射内省自动封装结果集</p>
+<h3 id="自定义框架设计"><a href="#自定义框架设计" class="headerlink" title="自定义框架设计:"></a>自定义框架设计:</h3><h5 id="大概流程"><a href="#大概流程" class="headerlink" title="大概流程:"></a>大概流程:</h5><p>1.加载xml配置文件,封装成configuration对象(封装了数据库连接池的相关信息,以及所有配置文件的信息)</p>
+<p>2.将配置文件中,以namespace.statementId为唯一表示,存放到map中,value为具体需要执行的,自己封装的mappedStatement(封装了数据库的连接)</p>
+<p>3.在执行相对应的方法,通过传入的namespace.statementId获取对应的mappedStatement,注册驱动,获取连接,解析sql,填充参数,最后执行. 或者使用mapper的动态代理对象,直接调用相对应的方法执行.这里需要满足statementId与接口的方法名相同</p>
+<h5 id="框架核心所运用的设计模式"><a href="#框架核心所运用的设计模式" class="headerlink" title="框架核心所运用的设计模式:"></a>框架核心所运用的设计模式:</h5><p>构建者设计模式( 当一个复杂对象在初始化过于复杂时,我们使用该设计模式,一步一步构建小对象,最后构成复杂对象)</p>
+<p>工厂设计模式(创建对象的工作在工厂方法代码里面,根据传入参数的不同,获取不通的对象)</p>
+<p>代理模式(对象的方法执行由代理对象完成)</p>
+<p>JDK动态代理:由代理模式衍生出来. 需要满足, 代理的对象实现了接口. 最终生成的代理对象,每次执行方法,都会去调用invoke(),这样就可以在方法执行前后,我们对方法进行增长.</p>
+<h3 id="mybatis动态sql"><a href="#mybatis动态sql" class="headerlink" title="mybatis动态sql:"></a>mybatis动态sql:</h3><p> mybatis动态sql是当我们的业务逻辑比较复杂时,需要将sql动态变化,根据我们传入的实体类或者参数,使用不同的sql语言进行查询.</p>
+<p>​    动态sql: </p>
+<ol>
+<li><p>if 语句 (简单的条件判断)</p>
+</li>
+<li><p>choose(when, otherwize)</p>
+</li>
+<li><p>trim (对包含的内容加上 prefix,或者 suffix 等，前缀，后缀)</p>
+</li>
+<li><p>where (主要是用来简化sql语句中where条件判断的，能智能的处理 and or )</p>
+</li>
+<li><p>set (用于update)</p>
+</li>
+<li><p>foreach (用于 in语句)</p>
+<p>原理:</p>
+<p>mybatis将xml的sql语句封装成一个个节点,每个节点都是一种动态sql类型的描述,例如  IfSqlNode, 每个动态sql有多个SqlNode构成,都需要实现内部定义的抽象方法apply(), 在sql执行的时候, 这个apply方法会依次执行子节点的apply(), 这样递归执行下去, 构建动态sql中prepareStatement的参数, 并保存最终生成sql的StringBuilder对象. 最终执行 sql</p>
+</li>
+</ol>
+<h3 id="mybatis映射"><a href="#mybatis映射" class="headerlink" title="mybatis映射:"></a>mybatis映射:</h3><h5 id="一对一"><a href="#一对一" class="headerlink" title="一对一:"></a>一对一:</h5><p>创建映射实体类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> Date ordertime;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span> total;</span><br><span class="line">    <span class="keyword">private</span> User user;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Date birthday;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建OrderMapper接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OrderMapper</span> </span>&#123;</span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置xml文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.lagou.mapper.OrderMapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"orderMap"</span> <span class="attr">type</span>=<span class="string">"com.lagou.domain.Order"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"uid"</span> <span class="attr">property</span>=<span class="string">"user.id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"username"</span> <span class="attr">property</span>=<span class="string">"user.username"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"password"</span> <span class="attr">property</span>=<span class="string">"user.password"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"birthday"</span> <span class="attr">property</span>=<span class="string">"user.birthday"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"findAll"</span> <span class="attr">resultMap</span>=<span class="string">"orderMap"</span>&gt;</span></span><br><span class="line">    select * from orders o,user u where o.uid=u.id</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"orderMap"</span> <span class="attr">type</span>=<span class="string">"com.lagou.domain.Order"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"ordertime"</span> <span class="attr">column</span>=<span class="string">"ordertime"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"total"</span> <span class="attr">column</span>=<span class="string">"total"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">"user"</span> <span class="attr">javaType</span>=<span class="string">"com.lagou.domain.User"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"uid"</span> <span class="attr">property</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"username"</span> <span class="attr">property</span>=<span class="string">"username"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"password"</span> <span class="attr">property</span>=<span class="string">"password"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"birthday"</span> <span class="attr">property</span>=<span class="string">"birthday"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="一对多-多对多类似"><a href="#一对多-多对多类似" class="headerlink" title="一对多(多对多类似):"></a>一对多(多对多类似):</h5><p>修改实体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> Date ordertime;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span> total;</span><br><span class="line">    <span class="keyword">private</span> User user;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Date birthday;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Order&gt; orderList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建UserMapper接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserMapper</span> </span>&#123;</span><br><span class="line">	<span class="function">List&lt;User&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置XML</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.lagou.mapper.UserMapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"userMap"</span> <span class="attr">type</span>=<span class="string">"com.lagou.domain.User"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">property</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"username"</span> <span class="attr">property</span>=<span class="string">"username"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"password"</span> <span class="attr">property</span>=<span class="string">"password"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"birthday"</span> <span class="attr">property</span>=<span class="string">"birthday"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"orderList"</span> <span class="attr">ofType</span>=<span class="string">"com.lagou.domain.Order"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"oid"</span> <span class="attr">property</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"ordertime"</span> <span class="attr">property</span>=<span class="string">"ordertime"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"total"</span> <span class="attr">property</span>=<span class="string">"total"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"findAll"</span> <span class="attr">resultMap</span>=<span class="string">"userMap"</span>&gt;</span></span><br><span class="line">    select *,o.id oid from user u left join orders o on u.id=o.uid</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="mybatis注解开发-代码不做演示"><a href="#mybatis注解开发-代码不做演示" class="headerlink" title="mybatis注解开发(代码不做演示)"></a>mybatis注解开发(代码不做演示)</h3><p>@Insert 新增<br>@Update 更新<br>@Delete 删除<br>@Select 查询<br>@Result 结果映射<br>@Results 与 @Result 封装多个结果集<br>@One 一对一<br>@Many 一堆多或者多对多</p>
+<h3 id="mybatis缓存-一级缓存与二级缓存"><a href="#mybatis缓存-一级缓存与二级缓存" class="headerlink" title="mybatis缓存(一级缓存与二级缓存):"></a>mybatis缓存(一级缓存与二级缓存):</h3><p>  存储结构: 一级缓存跟二级缓存底层的数据结构都是hashMap, 其中key是mybatis自己封装的CacheKey是, 生成方式主要由MappedStatement RowBounds(分页相关对象)  BoundSql 构成.  一级缓存的value主要是保存sql查询之后的结果(包括具体的对象), 重复执行玩一次sql,都获取到同一个对象. 二级缓存缓存的是结果的数据(不能具体到对象), 即获取到不同的对象,但是对象的值是相等的. 如果二级缓存配置的是redisCache,则使用到的是redis中的哈希数据结构.</p>
+<p>​    范围: 一级缓存是针对同一个sqlSession而言,同一个sqlSession查询的内容,缓存共享.  二级缓存是针对整个namespace, 多个sqlSession共享同一个二级缓存</p>
+<p>​    失效场景: 一级缓存和二级缓存每次查询都会进行数据的缓存. 在进行 insert update delet等数据库写操作的时候会清空缓存. 除此之外, 一级缓存,可以手动调用缓存的 clearCache方法清空缓存, 后续有查询操作缓存可以继续使用; 调用 sqlSession.close()方法之后,也会清空缓存,后续缓存不可用.</p>
+<h3 id="mybatis插件"><a href="#mybatis插件" class="headerlink" title="mybatis插件:"></a>mybatis插件:</h3><p>  mybatis四大组件(Executor, StatementHandler, ParameterHandler, ResultSetHandler) 允许对其内部的方法进行拦截, mybatis插件的原理就是拦截器对这些对象内部方法进行拦截.</p>
+<p>​    具体原理: </p>
+<p>在四大组件的对象创建出来后, 每个对象都不是直接返回,而是优先经过interceptorChain.pluginAll(parameterHandler)</p>
+<p>获取到所有的拦截器,调用interceptorChain.pluginAll(parameterHandler)</p>
+<p>为目标对象利用动态代理创建代理对象; 面向切面的方式,拦截到每一个需要拦截的方法,加入业务逻辑,以达到插件的目的.</p>
+<h3 id="mybatis架构原理"><a href="#mybatis架构原理" class="headerlink" title="mybatis架构原理:"></a>mybatis架构原理:</h3><p>分三层:</p>
+<p>(1) API接口层:对外提供使用的接口API, 开发人员通过这些API操作数据库. 接口层收到调用请求就会调用数据处理曾来完成数据的处理</p>
+<p>Mybatis提供两种方式调用API:</p>
+<p>a.使用传统方式(传入namespace.方法id)</p>
+<p>b.通过Mapper代理方式(getMapper())</p>
+<p>(2) 数据处理层: 复制具体的sql操作, sql解析, sql执行,以及执行结果的映射.</p>
+<p>(3) 基础支撑层: 负责最基础的功能支撑,包括连接管理, 事务管理, 配置加载, 缓存处理.</p>
+<h5 id="主要构建及其相互关系"><a href="#主要构建及其相互关系" class="headerlink" title="主要构建及其相互关系"></a>主要构建及其相互关系</h5><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SqlSession</td>
+<td>作为mybatis工作的主要顶层api,表示和数据库交互的会话,完成数据库操作</td>
+</tr>
+<tr>
+<td>Executor</td>
+<td>执行器,是调度的核心,负责sql语句的生成和查询缓存</td>
+</tr>
+<tr>
+<td>StatementHandler</td>
+<td>封装了JDBC Statement操作,设置参数已经封装结果为list</td>
+</tr>
+<tr>
+<td>ParameterHandler</td>
+<td>负责设置参数,被StatementHandler调用</td>
+</tr>
+<tr>
+<td>ResultSetHandler</td>
+<td>负责封装结果, 被StatementHandler调用</td>
+</tr>
+<tr>
+<td>TypeHandler</td>
+<td>负责数据库类型与java类型映射</td>
+</tr>
+<tr>
+<td>MappedStatement</td>
+<td>封装了sql语句的节点</td>
+</tr>
+<tr>
+<td>SqlSource</td>
+<td>根据用户传递的parameterObject,动态生成sql语句,将信息封装到BoundSql中</td>
+</tr>
+<tr>
+<td>BoundSql</td>
+<td>表示动态生成的sql语句已经相对应的参数信息</td>
+</tr>
+</tbody></table>
+<h5 id="mybatis执行器"><a href="#mybatis执行器" class="headerlink" title="mybatis执行器:"></a>mybatis执行器:</h5><p> 最基本的有三种:</p>
+<p>​    SimpleExecutor, ReuseExecutor, BathExecutor</p>
+<p>​    严格来讲在mybatis源码中还有 BaseExecutor, CachingExecutor, ClosedExecutor(方法都抛出异常)</p>
+<p>​    区别:</p>
+<p>​    SimpleExecutor 每执行一次update或select，就开启一个Statement对象，用完立刻关闭Statement对象。</p>
+<p>​    ReuseExecutor  执行update或select，以sql作为key查找Statement对象，存在就使用，不存在就创建，用完后，不关闭Statement对象，而是放置于Map内，供下一次使用。简言之，就是重复使用Statement对象。</p>
+<p>​    BathExecutor   执行update（没有select，JDBC批处理不支持select），将所有sql都添加到批处理中（addBatch()），等待统一执行（executeBatch()），它缓存了多个Statement对象，每个Statement对象都是addBatch()完毕后，等待逐一执行executeBatch()批处理。与JDBC批处理相同。</p>
+<h5 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载:"></a>懒加载:</h5><p> 仅支持association关联对象和collection关联集合对象的延迟加载，association指的就是一对一，collection指的就是一对多查询。</p>
+<p>​    原理: 使用CGLIB动态代理,当调用目标方法时,实际上调用的是动态代理对象的invoke方法, 在法相目标方法返回的是null值,那么久会单独执行一次事先保存好的关联相对应对象的sql,将执行结果按照配置文件设置到对一个的字段上,接着完成 相对应的逻辑.</p>
 
       
     </div>
