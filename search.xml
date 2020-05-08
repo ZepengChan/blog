@@ -287,7 +287,7 @@
       </tags>
   </entry>
   <entry>
-    <title>RESTful API设计</title>
+    <title>RESTfulAPI设计</title>
     <url>/blog/2020/05/07/RESTful%20API%E8%AE%BE%E8%AE%A1/</url>
     <content><![CDATA[<h1 id="RESTful-API设计"><a href="#RESTful-API设计" class="headerlink" title="RESTful API设计"></a>RESTful API设计</h1><ul>
 <li><p>rest⻛格请求是什么样的？</p>
