@@ -860,6 +860,193 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zepengchan.github.io/blog/2020/05/19/Tomcat%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/logo.jpg">
+      <meta itemprop="name" content="KenChan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大肥猫的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/2020/05/19/Tomcat%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/" class="post-title-link" itemprop="url">Tomcat原理剖析</a>
+        </h2>
+
+        <div class="post-meta">
+
+        	 
+    				<i class="fa fa-thumb-tack"></i>
+   					 <font color=7D26CD>置顶</font>
+    				<span class="post-meta-divider">|</span>
+			 
+            <span class="post-meta-item">
+           		
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-19 15:52:09 / 修改时间：16:25:08" itemprop="dateCreated datePublished" datetime="2020-05-19T15:52:09+08:00">2020-05-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Tomcat原理剖析"><a href="#Tomcat原理剖析" class="headerlink" title="Tomcat原理剖析"></a>Tomcat原理剖析</h1><h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><h3 id="请求流程"><a href="#请求流程" class="headerlink" title="请求流程"></a>请求流程</h3><ul>
+<li>HTTP 服务器接收到请求之后把请求交给Servlet容器来处理，Servlet 容器通过Servlet接⼝调⽤业务<br>类。Servlet接⼝和Servlet容器这⼀整套内容叫作Servlet规范。</li>
+<li>注意：Tomcat既按照Servlet规范的要求去实现了Servlet容器，同时它也具有HTTP服务器的功能</li>
+<li>Tomcat的两个重要身份<ul>
+<li>http服务器</li>
+<li>Tomcat是⼀个Servlet容器</li>
+</ul>
+</li>
+</ul>
+<h3 id="Tomcat-Servlet容器处理流程"><a href="#Tomcat-Servlet容器处理流程" class="headerlink" title="Tomcat Servlet容器处理流程"></a>Tomcat Servlet容器处理流程</h3><p>当⽤户请求某个URL资源时</p>
+<ul>
+<li>HTTP服务器会把请求信息使⽤ServletRequest对象封装起来</li>
+<li>进⼀步去调⽤Servlet容器中某个具体的Servlet</li>
+<li>在 上一步中，Servlet容器拿到请求后，根据URL和Servlet的映射关系，找到相应的Servlet</li>
+<li>如果Servlet还没有被加载，就⽤反射机制创建这个Servlet，并调⽤Servlet的init⽅法来完成初始化</li>
+<li>接着调⽤这个具体Servlet的service⽅法来处理请求，请求处理结果使⽤ServletResponse对象封装</li>
+<li>把ServletResponse对象返回给HTTP服务器，HTTP服务器会把响应发送给客户端</li>
+</ul>
+<p><img src="D:%5Cdev%5CcodeStudy%5Ccourse%5C%E4%BD%9C%E4%B8%9A%E5%92%8C%E7%AC%94%E8%AE%B0%5Cimages%5CTomcat%5C1.jpg" alt=""></p>
+<h3 id="Tomcat系统总体架构"><a href="#Tomcat系统总体架构" class="headerlink" title="Tomcat系统总体架构"></a>Tomcat系统总体架构</h3><p>通过上⾯的讲解，我们发现tomcat有两个⾮常重要的功能需要完成</p>
+<ol>
+<li>和客户端浏览器进⾏交互，进⾏socket通信，将字节流和Request/Response等对象进⾏转换</li>
+<li>Servlet容器处理业务逻辑</li>
+</ol>
+<p>Tomcat 设计了两个核⼼组件连接器（Connector）和容器（Container）来完成 Tomcat 的两⼤核⼼<br>功能。<br><strong>连接器，负责对外交流</strong>： 处理Socket连接，负责⽹络字节流与Request和Response对象的转化；<br><strong>容器，负责内部处理</strong>：加载和管理Servlet，以及具体处理Request请求；</p>
+<h3 id="Tomcat-连接器组件-Coyote"><a href="#Tomcat-连接器组件-Coyote" class="headerlink" title="Tomcat 连接器组件 Coyote"></a>Tomcat 连接器组件 Coyote</h3><p>Coyote 是Tomcat 中连接器的组件名称 , 是对外的接⼝。客户端通过Coyote与服务器建⽴连接、发送请<br>求并接受响应 。</p>
+<ol>
+<li>Coyote 封装了底层的⽹络通信（Socket 请求及响应处理）</li>
+<li>Coyote 使Catalina 容器（容器组件）与具体的请求协议及IO操作⽅式完全解耦</li>
+<li>Coyote 将Socket 输⼊转换封装为 Request 对象，进⼀步封装后交由Catalina 容器进⾏处理，处<br>理请求完成后, Catalina 通过Coyote 提供的Response 对象将结果写⼊输出流</li>
+<li>Coyote 负责的是<strong>具体协议（应⽤层）和IO（传输层）相关内容</strong></li>
+</ol>
+<p><img src="D:%5Cdev%5CcodeStudy%5Ccourse%5C%E4%BD%9C%E4%B8%9A%E5%92%8C%E7%AC%94%E8%AE%B0%5Cimages%5CTomcat%5C2.jpg" alt=""></p>
+<p>在 8.0 之前 ，Tomcat 默认采⽤的I/O⽅式为 BIO，之后改为 NIO。 ⽆论 NIO、NIO2 还是 APR， 在性<br>能⽅⾯均优于以往的BIO。 如果采⽤APR， 甚⾄可以达到 Apache HTTP Server 的影响性能。</p>
+<h4 id="Coyote-组件及作⽤"><a href="#Coyote-组件及作⽤" class="headerlink" title="Coyote 组件及作⽤"></a>Coyote 组件及作⽤</h4><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作⽤描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EndPoint</td>
+<td>EndPoint 是 Coyote 通信端点，即通信监听的接⼝，是具体Socket接收和发送处理器，是对传输层的抽象，因此EndPoint⽤来实现TCP/IP协议的</td>
+</tr>
+<tr>
+<td>Processor</td>
+<td>Processor 是Coyote 协议处理接⼝ ，如果说EndPoint是⽤来实现TCP/IP协议的，那么Processor⽤来实现HTTP协议，Processor接收来⾃EndPoint的Socket，读取字节流解析成Tomcat Request和Response对象，并通过Adapter将其提交到容器处理，Processor是对应⽤层协议的抽象</td>
+</tr>
+<tr>
+<td>ProtocolHandler</td>
+<td>Coyote 协议接⼝， 通过Endpoint 和 Processor ， 实现针对具体协议的处理能⼒。Tomcat 按照协议和I/O 提供了6个实现类 ： Ajp NioProtocol ，Ajp AprProtocol， Ajp Nio2Protocol ， Http11NioProtocol ，Http11Nio2Protocol ，Http11AprProtocol</td>
+</tr>
+<tr>
+<td>Adapter</td>
+<td>由于协议不同，客户端发过来的请求信息也不尽相同，Tomcat定义了⾃⼰的Request类来封装这些请求信息。ProtocolHandler接⼝负责解析请求并⽣成Tomcat Request类。但是这个Request对象不是标准的ServletRequest，不能⽤Tomcat Request作为参数来调⽤容器。Tomcat设计者的解决⽅案是引⼊CoyoteAdapter，这是适配器模式的经典运⽤，连接器调⽤CoyoteAdapter的Sevice⽅法，传⼊的是Tomcat Request对象, CoyoteAdapter负责将Tomcat Request转成ServletRequest，再调⽤容器</td>
+</tr>
+</tbody></table>
+<h3 id="Tomcat-Servlet-容器-Catalina"><a href="#Tomcat-Servlet-容器-Catalina" class="headerlink" title="Tomcat Servlet 容器 Catalina"></a>Tomcat Servlet 容器 Catalina</h3><h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p>Tomcat（我们往往有⼀个认识，Tomcat就是⼀个Catalina的实例，因为Catalina是Tomcat的核⼼）</p>
+<p>Tomcat/Catalina实例</p>
+<p><img src="D:%5Cdev%5CcodeStudy%5Ccourse%5C%E4%BD%9C%E4%B8%9A%E5%92%8C%E7%AC%94%E8%AE%B0%5Cimages%5CTomcat%5C3.jpg" alt=""></p>
+<p>可以认为整个Tomcat就是⼀个Catalina实例，Tomcat 启动的时候会初始化这个实例，Catalina</p>
+<p>实例通过加载server.xml完成其他实例的创建，创建并管理⼀个Server，Server创建并管理多个服务，</p>
+<p>每个服务⼜可以有多个Connector和⼀个Container。</p>
+<p>⼀个Catalina实例（容器）</p>
+<p>⼀个 Server实例（容器）</p>
+<p>多个Service实例（容器）</p>
+<p>每⼀个Service实例下可以有多个Connector实例和⼀个Container实例</p>
+<ul>
+<li>Catalina<br>负责解析Tomcat的配置⽂件（server.xml） , 以此来创建服务器Server组件并进⾏管理</li>
+<li>Server<br>服务器表示整个Catalina Servlet容器以及其它组件，负责组装并启动Servlaet引擎,Tomcat连接<br>器。Server通过实现Lifecycle接⼝，提供了⼀种优雅的启动和关闭整个系统的⽅式</li>
+<li>Service<br>服务是Server内部的组件，⼀个Server包含多个Service。它将若⼲个Connector组件绑定到⼀个<br>Container</li>
+<li>Container<br>容器，负责处理⽤户的servlet请求，并返回对象给web⽤户的模块</li>
+</ul>
+<h4 id="Container-组件的具体结构"><a href="#Container-组件的具体结构" class="headerlink" title="Container 组件的具体结构"></a>Container 组件的具体结构</h4><p>Container组件下有⼏种具体的组件，分别是Engine、Host、Context和Wrapper。这4种组件（容器）<br>是⽗⼦关系。Tomcat通过⼀种分层的架构，使得Servlet容器具有很好的灵活性。</p>
+<ul>
+<li>Engine<br>表示整个Catalina的Servlet引擎，⽤来管理多个虚拟站点，⼀个Service最多只能有⼀个Engine，<br>但是⼀个引擎可包含多个Host</li>
+<li>Host<br>代表⼀个虚拟主机，或者说⼀个站点，可以给Tomcat配置多个虚拟主机地址，⽽⼀个虚拟主机下<br>可包含多个Context</li>
+<li>Context<br>表示⼀个Web应⽤程序， ⼀个Web应⽤可包含多个Wrapper</li>
+<li>Wrapper<br>表示⼀个Servlet，Wrapper 作为容器中的最底层，不能包含⼦容器</li>
+</ul>
+<h2 id="源码剖析"><a href="#源码剖析" class="headerlink" title="源码剖析"></a>源码剖析</h2><p>源码追踪部分我们关注两个流程：Tomcat启动流程和Tomcat请求处理流程</p>
+<h4 id="Tomcat启动流程"><a href="#Tomcat启动流程" class="headerlink" title="Tomcat启动流程"></a>Tomcat启动流程</h4><p><img src="D:%5Cdev%5CcodeStudy%5Ccourse%5C%E4%BD%9C%E4%B8%9A%E5%92%8C%E7%AC%94%E8%AE%B0%5Cimages%5CTomcat%5C4.jpg" alt=""></p>
+<h4 id="Tomcat请求处理流程"><a href="#Tomcat请求处理流程" class="headerlink" title="Tomcat请求处理流程"></a>Tomcat请求处理流程</h4><ul>
+<li><p>请求处理流程分析</p>
+<p><img src="D:%5Cdev%5CcodeStudy%5Ccourse%5C%E4%BD%9C%E4%B8%9A%E5%92%8C%E7%AC%94%E8%AE%B0%5Cimages%5CTomcat%5C5.jpg" alt=""></p>
+</li>
+<li><p>请求处理流程示意图</p>
+<p><img src="D:%5Cdev%5CcodeStudy%5Ccourse%5C%E4%BD%9C%E4%B8%9A%E5%92%8C%E7%AC%94%E8%AE%B0%5Cimages%5CTomcat%5C6.jpg" alt=""></p>
+</li>
+</ul>
+<h4 id="Tomcat-的类加载机制"><a href="#Tomcat-的类加载机制" class="headerlink" title="Tomcat 的类加载机制"></a>Tomcat 的类加载机制</h4><p>Tomcat 的类加载机制相对于 Jvm 的类加载机制做了⼀些改变。</p>
+<p>没有严格的遵从双亲委派机制，也可以说打破了双亲委派机制</p>
+<p>⽐如：有⼀个tomcat，webapps下部署了两个应⽤</p>
+<p>app1/lib/a-1.0.jar com.lagou.edu.Abc</p>
+<p>app2/lib/a-2.0.jar com.lagou.edu.Abc</p>
+<p>不同版本中Abc类的内容是不同的，代码是不⼀样的</p>
+<p><img src="D:%5Cdev%5CcodeStudy%5Ccourse%5C%E4%BD%9C%E4%B8%9A%E5%92%8C%E7%AC%94%E8%AE%B0%5Cimages%5CTomcat%5C7.jpg" alt=""></p>
+<ul>
+<li>引导类加载器 和 扩展类加载器 的作⽤不变</li>
+<li>系统类加载器正常情况下加载的是 CLASSPATH 下的类，但是 Tomcat 的启动脚本并未使⽤该变<br>量，⽽是加载tomcat启动的类，⽐如bootstrap.jar，通常在catalina.bat或者catalina.sh中指定。<br>位于CATALINA_HOME/bin下</li>
+<li>Common 通⽤类加载器加载Tomcat使⽤以及应⽤通⽤的⼀些类，位于CATALINA_HOME/lib下，<br>⽐如servlet-api.jar</li>
+<li>Catalina ClassLoader ⽤于加载服务器内部可⻅类，这些类应⽤程序不能访问</li>
+<li>Shared ClassLoader ⽤于加载应⽤程序共享类，这些类服务器不会依赖</li>
+<li>Webapp ClassLoader，每个应⽤程序都会有⼀个独⼀⽆⼆的Webapp ClassLoader，他⽤来加载<br>本应⽤程序 /WEB-INF/classes 和 /WEB-INF/lib 下的类。</li>
+<li>tomcat 8.5 默认改变了严格的双亲委派机制<ul>
+<li>⾸先从 Bootstrap Classloader加载指定的类</li>
+<li>如果未加载到，则从 /WEB-INF/classes加载</li>
+<li>如果未加载到，则从 /WEB-INF/lib/*.jar 加载</li>
+<li>如果未加载到，则依次从 System、Common、Shared 加载（在这最后⼀步，遵从双亲委派<br>机制）</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://zepengchan.github.io/blog/2020/04/29/%E4%B8%80%E4%B8%AAjava%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E6%8E%92%E6%9F%A5%E6%A1%88%E4%BE%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1568,7 +1755,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1581,7 +1768,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
